@@ -1,0 +1,20 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# pytest cache
+.pytest_cache/
+
+# Test reports and artifacts
+test-results/
+playwright-report/
+reports/
+
+# Environment variables and secrets
+.env
+
+# macOS files
+.DS_Store
