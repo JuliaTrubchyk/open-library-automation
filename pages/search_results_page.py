@@ -22,3 +22,7 @@ class SearchResultsPage(BasePage):
             return None
 
         return author.first.inner_text()
+
+    def open_book(self, index: int):
+        book_card = self.book_cards.nth(index)
+        book_card.locator("h3.booktitle a").click()

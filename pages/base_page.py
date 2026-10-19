@@ -6,7 +6,7 @@ class BasePage:
     def __init__(self, page: Page):
         self.page = page
         self.search_button = page.get_by_role("button", name="Search", exact=True)
-        self.search_input = page.get_by_role("searchbox", name="Search") # from modal window
+        self.search_input = page.locator("ol-search-modal input.search-input") # from modal window
 
     def get_url(self) -> str:
         return self.page.url
