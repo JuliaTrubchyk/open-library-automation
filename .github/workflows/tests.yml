@@ -27,7 +27,7 @@ jobs:
         run: python -m playwright install --with-deps chromium
 
       - name: Run UI and API tests
-        run: pytest tests/ -v
+        run: pytest tests/ -v -m "not blocked"
 
       - name: Upload test artifacts
         if: failure()

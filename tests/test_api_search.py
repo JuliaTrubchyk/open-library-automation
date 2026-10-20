@@ -2,7 +2,7 @@
 from playwright.sync_api import Playwright
 
 
-def test_api_search_books(playwright: Playwright):
+def test_api_search_books(playwright: Playwright):    # playwright is the fixture provided by pytest-playwright
     api_context = playwright.request.new_context()
 
     try:
