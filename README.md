@@ -111,6 +111,29 @@ Run all tests except blocked tests:
 ```bash
 pytest -v -m "not blocked"
 ```
+## Test Reporting
+
+The framework uses **pytest-html** to generate HTML reports containing test execution results, including passed, failed, and deselected tests.
+
+To generate a local HTML report, run:
+
+```bash
+pytest -v -m "not blocked" --html=reports/report.html --self-contained-html
+```
+
+The generated report can be opened in a browser.
+
+### Screenshots and Traces
+
+Playwright is configured to capture screenshots and retain traces when UI tests fail.
+
+These debugging artifacts are saved in the `test-results/` directory and can be used to investigate failures.
+
+### GitHub Actions Reports
+
+GitHub Actions automatically generates separate HTML reports for API and UI tests.
+
+Reports are uploaded as downloadable workflow artifacts, even when tests fail. Playwright debugging artifacts are also uploaded when the UI job fails and artifacts are available.
 
 ## Continuous Integration
 
@@ -136,5 +159,7 @@ This test is excluded from regular CI execution using `-m "not blocked"`.
 - Pytest fixtures for setup and teardown
 - Positive and negative API testing
 - Separate UI and API test suites
+- HTML test reports using pytest-html
+- Screenshots for failed UI tests
 - Automated execution through GitHub Actions
 - Playwright screenshots and traces for debugging UI failures
