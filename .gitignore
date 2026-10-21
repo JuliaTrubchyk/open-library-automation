@@ -9,9 +9,9 @@ __pycache__/
 .pytest_cache/
 
 # Test reports and artifacts
+reports/
 test-results/
 playwright-report/
-reports/
 
 # Environment variables and secrets
 .env
