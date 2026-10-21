@@ -1,3 +1,4 @@
+# Verify that Open Library returns the correct work details for a valid work ID.
 
 from playwright.sync_api import Playwright
 
@@ -17,7 +18,7 @@ def test_api_get_book_details(playwright: Playwright):
         data = response.json()
 
         assert data["title"] == "The Hobbit"
-        assert data["key"] == f"/works/{work_id}"
+        assert data["key"] == f"/works/{work_id}"    # key is the identifier path for the returned record
         assert data["type"]["key"] == "/type/work"
 
     finally:
