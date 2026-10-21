@@ -1,20 +1,15 @@
 # Open Library Test Automation Framework
 
-## Project Overview
+An automated testing framework for [Open Library](https://openlibrary.org), built using **Python, pytest, and Playwright**.
 
-This project is a test automation framework for [Open Library](https://openlibrary.org), developed using **Python, Playwright, and pytest**.
-
-The framework covers UI and API testing and follows the **Page Object Model (POM)** design pattern to improve code reusability, readability, and maintainability.
-
-The project is currently under development.
+The project demonstrates UI and API test automation, reusable test components, Page Object Model (POM), pytest fixtures, and continuous integration with GitHub Actions.
 
 ## Tech Stack
 
 - **Python** — Programming language
+- **pytest** — Test framework and assertions
 - **Playwright** — Browser automation and API testing
-- **pytest** — Test execution, fixtures, and assertions
 - **GitHub Actions** — Continuous integration (CI)
-- **Git and GitHub** — Version control
 
 ## Project Structure
 
@@ -23,75 +18,75 @@ open_library_automation/
 ├── .github/
 │   └── workflows/
 │       └── tests.yml
-├── pages/
+├── api/
 │   ├── __init__.py
+│   └── open_library_client.py
+├── pages/
 │   ├── base_page.py
 │   ├── home_page.py
 │   ├── search_results_page.py
 │   └── book_details_page.py
 ├── tests/
-│   ├── test_home.py
-│   ├── test_ui_search.py
-│   ├── test_book_details.py
-│   └── test_api_search.py
+│   ├── api/
+│   │   ├── conftest.py
+│   │   ├── test_api_search.py
+│   │   ├── test_api_book_details.py
+│   │   ├── test_api_edition_details.py
+│   │   └── test_api_invalid_work.py
+│   └── ui/
+│       ├── test_home.py
+│       ├── test_ui_search.py
+│       └── test_book_details.py
 ├── conftest.py
 ├── pytest.ini
 ├── requirements.txt
-├── .gitignore
 └── README.md
 ```
 
-## Framework Architecture
+## Test Coverage
 
-The framework uses the **Page Object Model (POM)** pattern to separate page interactions from test logic.
+### UI Testing
 
-- `BasePage` contains common functionality shared between pages.
-- `HomePage` provides navigation to the Open Library homepage.
-- `SearchResultsPage` contains locators and methods for interacting with book search results.
-- `BookDetailsPage` contains locators for validating book details.
-- `conftest.py` defines pytest fixtures for creating Page Object instances.
-- `pytest.ini` contains test execution and Playwright configuration.
+- Verify that the Open Library homepage loads successfully.
+- Search for books and validate search results.
+- Navigate to book details and verify book information.
 
-## Implemented Tests
+UI tests follow the **Page Object Model (POM)** design pattern, separating page locators and interactions from test assertions.
 
-| Test | Description | Status |
-|---|---|---|
-| UI TC01 | Search for "The Hobbit" and validate search results | Previously passed |
-| UI TC02 | Open book details, compare titles, and navigate back | Implemented; validation pending |
-| API TC01 | Search for books using the Open Library API | Passed locally |
+### API Testing
 
-**Note:** Open Library has experienced intermittent connectivity issues and human verification challenges during automated testing. These external conditions have affected test execution.
+- **TC01 — Search Books:** Verify that searching with a valid keyword returns the expected number of records.
+- **TC02 — Get Work Details:** Verify work details for a valid work ID.
+- **TC03 — Get Edition Details:** Verify edition details for a valid edition ID.
+- **TC04 — Invalid Work ID:** Verify that requesting a nonexistent work returns HTTP 404.
+
+API tests use a reusable `OpenLibraryClient` class with methods such as `search_books()`, `get_work()`, and `get_edition()`.
+
+Pytest fixtures manage API request context setup and cleanup.
 
 ## Installation
 
-### 1. Clone the repository
+Clone the repository:
 
 ```bash
 git clone https://github.com/JuliaTrubchyk/open-library-automation.git
 cd open-library-automation
 ```
 
-### 2. Create a virtual environment
+Create and activate a virtual environment:
 
 ```bash
 python3 -m venv .venv
-```
-
-### 3. Activate the virtual environment
-
-On macOS or Linux:
-
-```bash
 source .venv/bin/activate
 ```
 
-### 4. Install dependencies
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 5. Install Playwright Chromium
+Install the Chromium browser for Playwright:
 
 ```bash
 python -m playwright install chromium
@@ -99,52 +94,47 @@ python -m playwright install chromium
 
 ## Running Tests
 
-Run all tests:
+Run all API tests:
 
 ```bash
-pytest
+pytest tests/api/ -v
 ```
 
-Run UI search tests:
+Run UI tests, excluding the known blocked test:
 
 ```bash
-pytest tests/test_ui_search.py -v
+pytest tests/ui/ -v -m "not blocked"
 ```
 
-Run book details tests:
+Run all tests except blocked tests:
 
 ```bash
-pytest tests/test_book_details.py -v
+pytest -v -m "not blocked"
 ```
 
-Run API tests:
+## Continuous Integration
 
-```bash
-pytest tests/test_api_search.py -v
-```
+GitHub Actions automatically runs tests when changes are pushed to the repository.
 
-## CI/CD — GitHub Actions
+The workflow contains two independent jobs:
 
-The project includes a GitHub Actions workflow designed to run UI and API tests automatically.
+- **API Tests:** Installs Python dependencies and executes API tests.
+- **UI Tests:** Installs Python dependencies and Chromium, then executes UI tests excluding blocked tests.
 
-The workflow:
+When UI tests fail, the workflow attempts to upload Playwright test artifacts for debugging.
 
-1. Checks out the repository.
-2. Sets up Python.
-3. Installs project dependencies.
-4. Installs Chromium for Playwright.
-5. Executes the pytest test suite.
-6. Uploads available test artifacts when tests fail.
+## Known Limitations
 
-## Future Improvements
+One UI test involving navigation to book details is marked with `@pytest.mark.blocked` because Open Library's human-verification challenge can interrupt automated browser navigation.
 
-- Expand UI and API test coverage.
-- Improve handling and reporting of external website availability issues.
-- Introduce reusable API client methods.
-- Add HTML test reports.
-- Improve test data management and parametrization.
-- Validate tests consistently in GitHub Actions.
+This test is excluded from regular CI execution using `-m "not blocked"`.
 
-## Author
+## Key Framework Features
 
-QA Automation Practice Project
+- Page Object Model for reusable UI interactions
+- Reusable API client for HTTP requests
+- Pytest fixtures for setup and teardown
+- Positive and negative API testing
+- Separate UI and API test suites
+- Automated execution through GitHub Actions
+- Playwright screenshots and traces for debugging UI failures
