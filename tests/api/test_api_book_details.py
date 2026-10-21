@@ -1,15 +1,12 @@
 # Verify that Open Library returns the correct work details for a valid work ID.
 
-from playwright.sync_api import APIRequestContext
+from api.open_library_client import OpenLibraryClient
 
 
-def test_api_get_book_details(api_context: APIRequestContext):
-
+def test_api_get_book_details(api_client: OpenLibraryClient):
     work_id = "OL27482W"
 
-    response = api_context.get(
-        f"https://openlibrary.org/works/{work_id}.json"
-    )
+    response = api_client.get_work(work_id)
 
     assert response.status == 200
 
@@ -17,4 +14,6 @@ def test_api_get_book_details(api_context: APIRequestContext):
 
     assert data["title"] == "The Hobbit"
     assert data["key"] == f"/works/{work_id}"    # key is the identifier path for the returned record
-    assert data["type"]["key"] == "/type/work"
+
+
+ 

@@ -1,14 +1,12 @@
 # Verify that Open Library returns the correct edition details for a valid edition ID
 
-from playwright.sync_api import APIRequestContext
+from api.open_library_client import OpenLibraryClient
 
 
-def test_api_get_edition_details(api_context: APIRequestContext):
+def test_api_get_edition_details(api_client: OpenLibraryClient):
     edition_id = "OL51709286M"
 
-    response = api_context.get(
-        f"https://openlibrary.org/books/{edition_id}.json"
-    )
+    response = api_client.get_edition(edition_id)
 
     assert response.status == 200
 
